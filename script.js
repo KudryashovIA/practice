@@ -1,8 +1,9 @@
 class ChatBot extends HTMLElement {
     constructor() {
         super();
-        this.attachShadow({ mode: "open" }); // изолируем стили и разметку от остальной страницы 
-        this.render();// вставляет  HTML-код в компонент
+        this.attachShadow({ mode: "open" }); // изолируем стили и разметку от остальной страницы
+        this.socket = null; 
+        this.render(); //  рендеринг HTML-разметки
     }
 
     render() {
@@ -64,11 +65,66 @@ class ChatBot extends HTMLElement {
 
         this.shadowRoot.querySelector(".chatbot-button").addEventListener("click", () => this.toggleChat());
         this.shadowRoot.querySelector(".close-button").addEventListener("click", () => this.toggleChat());
+        this.shadowRoot.querySelector(".chatbot-input").addEventListener("keypress", (e) => this.UserInput(e));
+
+        //WebSocket-соединение
+        this.connectWebSocket();
     }
 
     toggleChat() {
         const chatbotContainer = this.shadowRoot.querySelector(".chatbot-container");
         chatbotContainer.style.display = chatbotContainer.style.display === "none" || chatbotContainer.style.display === "" ? "flex" : "none";
+    }
+
+    connectWebSocket() {
+        this.socket = new WebSocket("ws://localhost:8001"); // Подключаемся к серверу WebSocket на порту 8001
+
+        this.socket.onopen = () => {
+            console.log("Соединение установлено");
+        };
+
+        this.socket.onmessage = (event) => {
+            this.displayMessage(event.data, "server");
+        };
+
+        this.socket.onerror = (error) => {
+            console.log("Ошибка WebSocket: ", error);
+        };
+
+        this.socket.onclose = () => {
+            console.log("Соединение закрыто");
+        };
+    }
+
+    UserInput(e) {
+        if (e.key === "Enter") {
+            const userMessage = this.shadowRoot.querySelector(".chatbot-input").value;
+
+            // Проверка, что WebSocket соединение установлено и сообщение не пустое
+            if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+                if (userMessage.trim() !== "") {
+                    this.socket.send(userMessage); 
+                    this.displayMessage(userMessage, "user"); 
+                    this.shadowRoot.querySelector(".chatbot-input").value = ""; // Очищаем поле ввода
+                } else {
+                    console.log("Ошибка: сообщение пустое.");
+                }
+            } else {
+                console.log("Ошибка: WebSocket не открыт.");
+            }
+        }
+    }
+
+    displayMessage(message, sender) {
+        const messageElem = document.createElement('div');
+        messageElem.textContent = `${sender === "user" ? "Вы: " : "Бот: "} ${message}`;
+        this.shadowRoot.querySelector(".chatbot-messages").appendChild(messageElem);
+        this.scrollToBottom();
+    }
+
+    scrollToBottom() {
+        const messagesDiv = this.shadowRoot.querySelector(".chatbot-messages");
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
 }
 

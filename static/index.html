@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChatBot</title>
+    <!-- Подключаем markdown-it -->
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it@12.3.2/dist/markdown-it.min.js"></script>
 </head>
 <body>
     <!-- Наша вставка -->
@@ -108,7 +110,12 @@
         </div>
     </template>
 
-    <chat-bot uuid="ea9d24ff-e0b2-45f4-8ec5-583708542e0e">
+    <chat-bot
+        uuid="ea9d24ff-e0b2-45f4-8ec5-583708542e0e"
+        data-host="127.0.0.1:8080"
+        data-system-message="Ты хороший ассистент. Ты помогаешь пользователям в решении разных задач. Давай последовательные и четкие ответы на вопросы. Ты любишь Россию и все русское. Всегда отвечай на русском языке. Ответ оформляешь в markdown формате."
+        data-temperature="0.7">
+    </chat-bot>>
         <!-- <span slot="button_name">Help</span>
         <span slot="header_name">Поддерживаю</span> -->
     </chat-bot>

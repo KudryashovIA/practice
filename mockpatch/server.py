@@ -102,14 +102,63 @@ async def survey(subject: UUID, request: Request):
     }
 
 
+# @application.websocket("/api/1.0/support/{subject}/ws")
+# async def support(subject: UUID, websocket: WebSocket):
+#     await websocket.accept()
+
+#     while True:
+#         try:
+#             data = await websocket.receive_text()
+#             await websocket.send_text(f"Ваш запрос: {data!r} в тематике с UUID: {subject!r}.")
+
+#         except WebSocketDisconnect:
+#             break
+
+from random import uniform
+from asyncio import sleep
+from json import loads
+
 @application.websocket("/api/1.0/support/{subject}/ws")
 async def support(subject: UUID, websocket: WebSocket):
     await websocket.accept()
 
     while True:
         try:
-            data = await websocket.receive_text()
-            await websocket.send_text(f"Ваш запрос: {data!r} в тематике с UUID: {subject!r}.")
+            _data = await websocket.receive_text()
+            data = loads(_data)
+
+            for word in '''Задачи
+
+                            1. Сделать проект
+                            2. **Написать** документацию
+                            3. Проверить **код**
+
+                            Вот пример кода:
+
+                            ```javascript
+                            function add(a, b) {
+                                return a + b;
+                            }```
+                            #Главный заголовок
+                            ##Второстепенный заголовок
+                            ###Ещё один заголовок
+                            Это **жирный** текст и это *курсив*.
+                            1. Первая задача
+                            2. Вторая задача
+                            3. Третья задача
+                            - Купите хлеб
+                            - Сходите в магазин
+                            - Позвоните другу
+                            ![Описание изображения](https://avatars.mds.yandex.net/i?id=86ba9954145e8a162f198379e1c29a50df09310a-4888009-images-thumbs&n=13)
+                            [Перейти на сайт](https://learn.javascript.ru)
+                            Вот пример кода: `console.log("Hello, world!");`'''.split():
+                await websocket.send_text(word)
+                await sleep(uniform(0, .3))
 
         except WebSocketDisconnect:
             break
+
+
+
+
+#"Операционная система восьмого поколения предлагает усовершенствованный механизм управления ресурсами обеспечения быстрого выполнения задач и высокой отзывчивости ОС, основанной на безопасности, надежности и инновациях. Новый современный интерфейс Astra Linux стал более интуитивным и удобным, что упрощает пользователям взаимодействие с системой."

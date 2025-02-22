@@ -4,14 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChatBot</title>
-    <!-- Подключаем markdown-it -->
     <script src="https://cdn.jsdelivr.net/npm/markdown-it@12.3.2/dist/markdown-it.min.js"></script>
 </head>
 <body>
-    <!-- Наша вставка -->
     <template id="chatbot-template">
         <style>
-             .chatbot-button {
+            think {
+                color: red;
+            }
+            #chatbot-button {
                 position: fixed;
                 bottom: 20px;
                 right: 20px;
@@ -23,10 +24,10 @@
                 cursor: pointer;
                 transition: 0.3s;
             }
-            .chatbot-button:hover {
+            #chatbot-button:hover {
                 background-color: darkgreen;
             }
-            .chatbot-container {
+            #chatbot-container {
                 position: fixed;
                 bottom: 20px;
                 right: 20px;
@@ -39,32 +40,32 @@
                 flex-direction: column;
                 padding: 10px;
             }
-            .chatbot-header {
+            #chatbot-header {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
                 border-bottom: 1px solid #ddd;
                 padding-bottom: 5px;
             }
-            .chatbot-messages {
+            #chatbot-messages {
                 flex: 1;
                 overflow-y: auto;
                 padding: 10px;
                 max-height: 300px;
                 scrollbar-width: thin;
             }
-            .chatbot-input-container {
+            #chatbot-input-container {
                 display: flex;
                 align-items: center;
             }
-            .chatbot-input {
+            #chatbot-input {
                 flex: 1;
                 padding: 10px;
                 border: 1px solid #ddd;
                 border-radius: 20px;
                 outline: none;
             }
-            .send-button {
+            #chatbot-send-bt {
                 background: green;
                 border: none;
                 color: white;
@@ -74,17 +75,17 @@
                 margin-left: 5px;
                 transition: 0.3s;
             }
-            .send-button:hover {
+            #chatbot-send-bt:hover {
                 background: darkgreen;
             }
-            .message-user {
+            .chatbot-message-user {
                 background-color: #DCF8C6;
                 border-radius: 5px;
                 padding: 5px;
                 margin-bottom: 10px;
                 word-wrap: break-word;
             }
-            .message-bot {
+            .chatbot-message-bot {
                 background-color: #F1F1F1;
                 border-radius: 5px;
                 padding: 5px;
@@ -92,41 +93,34 @@
                 word-wrap: break-word;
             }
         </style>
-        <button id="button" class="chatbot-button">
-            <slot name="button_name">Поддержка</slot>
+        <button id="chatbot-button">
+            <slot name="chatbot-button-name">Поддержка</slot>
         </button>
-        <div class="chatbot-container">
-            <div class="chatbot-header">
+        <div id="chatbot-container">
+            <div id="chatbot-header">
                 <h3>
-                    <slot name="header_name">Техподдержка</slot>
+                    <slot name="chatbot-header-name">Техподдержка</slot>
                 </h3>
-                <button id="cl_button" class="close-button">❌</button>
+                <button id="chatbot-close-bt">❌</button>
             </div>
-            <div class="chatbot-messages">Задайте ваш вопрос...</div>
-            <div class="chatbot-input-container">
-                <input id="input" type="text" class="chatbot-input" placeholder="Напишите сообщение...">
-                <button id="send_button" class="send-button">↑</button>
+            <div id="chatbot-messages">
+                <span id="chatbot-start-msg">Задайте ваш вопрос...</span>
+            </div>
+            <div id="chatbot-input-container">
+                <input id="chatbot-input" type="text" placeholder="Напишите сообщение...">
+                <button id="chatbot-send-bt">🡱</button>
             </div>
         </div>
     </template>
-
-    <chat-bot
+    <!-- 127.0.0.1:8080 129.6.111.15:8080-->
+    <chat-bot 
         uuid="ea9d24ff-e0b2-45f4-8ec5-583708542e0e"
-        data-host="127.0.0.1:8080"
-        data-system-message="Ты хороший ассистент. Ты помогаешь пользователям в решении разных задач. Давай последовательные и четкие ответы на вопросы. Ты любишь Россию и все русское. Всегда отвечай на русском языке. Ответ оформляешь в markdown формате."
-        data-temperature="0.7">
-    </chat-bot>>
-        <!-- <span slot="button_name">Help</span>
-        <span slot="header_name">Поддерживаю</span> -->
+        host="127.0.0.1:8080" 
+        prompt="Ты хороший ассистент. Ты помогаешь пользователям в решении разных задач. Давай последовательные и четкие ответы на вопросы. Ты любишь Россию и все русское. Всегда отвечай на русском языке. Ответ оформляешь в markdown формате."
+        temp="0.7">
+        <!-- <span slot="chatbot-button-name">Help</span>
+        <span slot="chatbot-header-name">Помощь</span> -->
     </chat-bot>
     <script src="./js/script.js"></script>
-    <!-- Наша вставка -->
-
 </body>
 </html>
-
-<!-- 
-
-  http://127.0.0.1:8080/api/1.0/support/54d4af17-601f-4fc8-a460-1b64905459fd/ws
-
--->
